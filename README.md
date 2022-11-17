@@ -19,5 +19,6 @@ Hier finden Sie alle Beispiele zum mehrteiligen Einstieg in den Container-Orches
 
 ## Beispiele für zukünftige Artikel (YAML noch nicht fertig)
 * Teil 4: [Eine umfangreichere Wordpress-Instanz mit persistentem Speicherplatz](./part-4/README.md)
+* Teil 5: [netpol.yml: Eine NetworPolicy](./part-5/netpol.yml)
 
 
