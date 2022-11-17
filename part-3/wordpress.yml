@@ -1,0 +1,128 @@
+--- # Backend
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: backend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wb-database-deployment
+  namespace: backend
+  labels:
+    app: wp-database
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: wp-database
+  template:
+    metadata:
+      name: wp-database
+      namespace: backend
+      labels:
+        app: wp-database
+    spec:
+      containers:
+        - name: mariadb
+          image: mariadb
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              value: "verySecret"
+            - name: MARIADB_DATABASE
+              value: "wp"
+            - name: MARIADB_USER
+              value: "wp"
+            - name: MARIADB_PASSWORD
+              value: "secretWp"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wp-database
+  namespace: backend
+spec:
+  selector:
+    app: wp-database
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+
+--- # Frontend
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wb-web-deployment
+  namespace: frontend
+  labels:
+    app: wp-web
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 50%
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: wp-web
+  template:
+    metadata:
+      labels:
+        app: wp-web
+    spec:
+      containers:
+        - name: web
+          image: wordpress:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: WORDPRESS_DB_HOST
+              value: "wp-database.backend"
+            - name: WORDPRESS_DB_NAME
+              value: "wp"
+            - name: WORDPRESS_DB_USER
+              value: "wp"
+            - name: WORDPRESS_DB_PASSWORD
+              value: "secretWp"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wp-external
+  namespace: frontend
+spec:
+  type: NodePort #Auskommentieren für den Einsatz mit Traefik
+  selector:
+    app: wp-web
+  ports:
+    - protocol: TCP
+      nodePort: 30001 #Auskommentieren für den Einsatz mit Traefik
+      port: 80
+      targetPort: 80
+---
+# Kommentierung entfernen für den Einsatz mit Traefik
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   name: wordpress-ingress
+#   namespace: frontend
+# spec:
+#   entryPoints:
+#     - web
+#   routes:
+#     - match: PathPrefix(`/`)
+#       kind: Rule
+#       services:
+#         - name: wp-external
+#           port: 80

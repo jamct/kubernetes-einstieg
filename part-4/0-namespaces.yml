@@ -1,0 +1,10 @@
+--- # Backend
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: backend
+--- # Frontend
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: frontend

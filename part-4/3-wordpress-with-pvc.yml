@@ -1,0 +1,80 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wb-database-deployment
+  namespace: backend
+  labels:
+    app: wp-database
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: wp-database
+  template:
+    metadata:
+      name: wp-database
+      namespace: backend
+      labels:
+        app: wp-database
+    spec:
+      volumes:
+        - name: volume-wp-db
+          persistentVolumeClaim:
+            claimName: pvc-wp-db
+      containers:
+        - name: mariadb
+          image: mariadb
+          volumeMounts:
+            - mountPath: "/var/lib/mysql"
+              name: volume-wp-db
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              value: "verySecret"
+            - name: MARIADB_DATABASE
+              value: "wp"
+            - name: MARIADB_USER
+              value: "wp"
+            - name: MARIADB_PASSWORD
+              value: "secretWp"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wb-web-deployment
+  namespace: frontend
+  labels:
+    app: wp-web
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 50%
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: wp-web
+  template:
+    metadata:
+      labels:
+        app: wp-web
+    spec:
+      containers:
+        - name: web
+          image: wordpress:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: WORDPRESS_DB_HOST
+              value: "wp-database.backend"
+            - name: WORDPRESS_DB_NAME
+              value: "wp"
+            - name: WORDPRESS_DB_USER
+              value: "wp"
+            - name: WORDPRESS_DB_PASSWORD
+              value: "secretWp"
