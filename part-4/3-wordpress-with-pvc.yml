@@ -1,4 +1,5 @@
 ---
+# Database
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -34,14 +35,24 @@ spec:
             - containerPort: 3306
           env:
             - name: MARIADB_ROOT_PASSWORD
-              value: "verySecret"
+              valueFrom:
+                secretKeyRef:
+                  name: secret-wp-db
+                  key: rootPassword
             - name: MARIADB_DATABASE
               value: "wp"
             - name: MARIADB_USER
-              value: "wp"
+              valueFrom:
+                secretKeyRef:
+                  name: secret-wp-db
+                  key: username
             - name: MARIADB_PASSWORD
-              value: "secretWp"
+              valueFrom:
+                secretKeyRef:
+                  name: secret-wp-db
+                  key: password
 ---
+# Frontend
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -69,12 +80,17 @@ spec:
           image: wordpress:latest
           ports:
             - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: config-wp-fe
           env:
-            - name: WORDPRESS_DB_HOST
-              value: "wp-database.backend"
-            - name: WORDPRESS_DB_NAME
-              value: "wp"
             - name: WORDPRESS_DB_USER
-              value: "wp"
+              valueFrom:
+                secretKeyRef:
+                  name: secret-wp-fe
+                  key: username
             - name: WORDPRESS_DB_PASSWORD
-              value: "secretWp"
+              valueFrom:
+                secretKeyRef:
+                  name: secret-wp-fe
+                  key: password
