@@ -17,8 +17,4 @@ Hier finden Sie alle Beispiele zum mehrteiligen Einstieg in den Container-Orches
 * Teil 2: [first-deployment.yml: Das erste Deployment (wieder Nginx)](./part-2/first-deployment.yml)
 * Teil 3: [wordpress.yml: Eine Wordpress-Instanz](./part-3/wordpress.yml)
 * Teil 4: [Eine umfangreichere Wordpress-Instanz mit persistentem Speicherplatz](./part-4/README.md)
-* Teil 5: [netpol.yml: Eine NetworkPolicy](./part-5/netpol.yml)
-
-## Beispiele für zukünftige Artikel
-
-
+* Teil 5: [netpol.yml: NetworkPolicyies und Berechtigungskonzepte](./part-5/README.md)
