@@ -3,12 +3,47 @@
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-name: default-deny
-namespace: default
+  name: default-deny
+  namespace: default
 spec:
-policyTypes:
-- Ingress
-- Egress
-podSelector: {}
-ingress: []
-egress: []
+  policyTypes:
+    - Ingress
+    - Egress
+  podSelector: {}
+  ingress: []
+  egress: []
+---
+# Eine komplexere NetworkPolicy, die Zugriff auf eine interne Datenbank, eine externe IP und den Kube-DNS erlaubt.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: example-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      example.org/network-rule: strict
+  ingress:
+    - from:
+        - podSelector: {}
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 12.34.56.0/24
+      ports:
+        - port: 443
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              app: database
+      ports:
+        - port: 3306
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP

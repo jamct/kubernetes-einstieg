@@ -1,0 +1,96 @@
+# Ein etwas komplexeres Szenario: Das WordPress-Beispiel aus Teil 4 wird so vernagelt, dass nur der Verkehr stattfinden darf, der auch wirklich
+# notwendig ist. Traefik erreicht die Frontend-Container auf Port 80, die wiederum erreichen die Datenbank auf Port 3306.
+# Außerdem braucht das Frontend den Kube-DNS, um den Namen seiner Datenbank auflösen zu können.
+
+---
+# Eine NetworkPolicy, die allen eingehenen und ausgehenden Verkehr im Namspace frontend blockiert
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-deny
+  namespace: frontend
+spec:
+  policyTypes:
+    - Ingress
+    - Egress
+  podSelector: {}
+  ingress: []
+  egress: []
+---
+# Eine NetworkPolicy, die allen eingehenen und ausgehenden Verkehr im Namspace backend blockiert
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-deny
+  namespace: backend
+spec:
+  policyTypes:
+    - Ingress
+    - Egress
+  podSelector: {}
+  ingress: []
+  egress: []
+---
+# #Eine NetworkPolicy für den Wordpress-Container (aus part-4), damit Traefik darauf zugreifen darf
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: wp-fe-policy
+  namespace: frontend
+spec:
+  podSelector:
+    matchLabels:
+      app: wp-web
+
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: traefik
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: default
+      ports:
+        - port: 80
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: wp-database
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: backend
+      ports:
+        - port: 3306
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
+---
+# #Eine NetworkPolicy für den Datenbank-Container (aus part-4), damit Wordpress darauf zugreifen darf
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: wp-be-policy
+  namespace: backend
+spec:
+  podSelector:
+    matchLabels:
+      app: wp-database
+
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: wp-web
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: frontend
+      ports:
+        - port: 3306
+---
+

@@ -1,0 +1,52 @@
+---
+# Der Rolle frontend-dev werden Berechtigungen zugewiesen
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: frontend
+  name: frontend-dev
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs:
+      [
+        "create",
+        "delete",
+        "deletecollection",
+        "get",
+        "list",
+        "patch",
+        "update",
+        "watch",
+      ]
+---
+# Der Benutzer frontend-guy bekommt die Rolle frontend-dev (und damit die obenstehenden Rechte)
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: frontend-dev
+  namespace: frontend
+subjects:
+  - kind: User
+    name: frontend-guy
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: frontend-dev
+---
+# Ein CSR für den Nutzer frontend-guy
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: csr-frontend-guy
+spec:
+  groups:
+    - system:authenticated
+  request: <Base64-String>
+  signerName: kubernetes.io/kube-apiserver-client
+  expirationSeconds: 157680000
+  usages:
+    - digital signature
+    - key encipherment
+    - client auth
