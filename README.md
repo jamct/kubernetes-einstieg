@@ -9,7 +9,7 @@ Hier finden Sie alle Beispiele zum mehrteiligen Einstieg in den Container-Orches
 |Teil 3: Containervernetzer|Vernetzung und Helm: Service und Ingress|[c’t 25/2022, S. 162](https://www.heise.de/select/ct/2022/25/2227819463169465666)|[Artikel vom 29.11.22](https://www.heise.de/ratgeber/Kubernetes-lernen-und-verstehen-Teil-3-Container-vernetzen-7351581.html)|
 |Teil 4: Containerladeoffizier|Persistenter Speicher: Volumes, ConfigMaps und Secrets|[c’t 26/2022, S. 130](https://www.heise.de/select/ct/2022/26/2230718252768410612)|[Artikel vom 8.12.22](https://www.heise.de/hintergrund/Kubernetes-lernen-und-verstehen-Teil-4-Daten-speichern-7367376.html)|
 |Teil 5: Container-Sicherheitsbegehung|Sicherheit: TLS, NetworkPolicies, Berechtigungen|[c’t 03/2023, S. 154](https://www.heise.de/select/ct/2023/3/2232021023011260054)|[Artikel vom 6.1.2023](https://www.heise.de/ratgeber/Kubernetes-lernen-und-verstehen-Teil-5-Sicherheitskonzepte-einsetzen-7445949.html)|
-|Helm-Einführung|YAML verpacken mit Helm|[c’t 11/2023, S. 164]()|[Artikel vom 4.5.2023]()|
+|Helm-Einführung|YAML verpacken mit Helm|[c’t 11/2023, S. 164]()|[Artikel vom 6.5.2023]()|
 
 ## Beispiele in diesem Repository
 
