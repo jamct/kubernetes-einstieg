@@ -19,5 +19,5 @@ jobs:
          tag: 1.0.0
          path: helm-wordpress
          registry: ghcr.io
-         registry_username: ${{ secrets.REGISTRY_USERNAME }}
-         registry_password: ${{ secrets.REGISTRY_PASSWORD }}
+         registry_username: ${{ github.actor }}
+         registry_password: ${{ secrets.GITHUB_TOKEN }}
