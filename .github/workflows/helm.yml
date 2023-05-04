@@ -1,0 +1,23 @@
+name: 'Release helm chart'
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: "ubuntu-latest"
+    steps:
+     - name: Checkout
+       uses: actions/checkout@v3
+     - name: Push Helm-WordPress to registry
+       uses: appany/helm-oci-chart-releaser@v0.3.0
+       with:
+         name: helm-wordpress
+         repository: jamct/kubernetes-einstieg
+         tag: 1.0.0
+         path: helm-wordpress
+         registry: ghcr.io
+         registry_username: ${{ secrets.REGISTRY_USERNAME }}
+         registry_password: ${{ secrets.REGISTRY_PASSWORD }}
