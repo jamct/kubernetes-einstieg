@@ -1,0 +1,17 @@
+images:
+  wordpress:
+    name: wordpress
+    tag: latest
+  mariadb:
+    name: mariadb
+    tag: latest
+
+ingress:
+  # Wenn aktiviert, muss Traefik installiert sein. Wenn nicht, erscheint die Anwendung auf dem alternativen Port.
+  enabled: false
+  alternativePort: 30001
+
+storage:
+  enabled: true
+  class: local-path
+  size: 4Gi

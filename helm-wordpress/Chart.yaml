@@ -1,0 +1,10 @@
+apiVersion: v2
+name: helm-wordpress
+description: "Eine kleine Helm-Demo. Achtung: Dies ist nicht das beste Helm-Chart für eine Wordpress-Umgebung"
+
+version: 1.0.0
+appVersion: "1.0.0"
+# dependencies:
+#   - name: traefik
+#     version: ~23.0.1
+#     repository: https://traefik.github.io/charts

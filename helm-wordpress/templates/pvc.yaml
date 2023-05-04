@@ -1,0 +1,13 @@
+{{- if .Values.storage.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "{{ include "helm-wordpress.fullname" . }}-db-vol"
+spec:
+  storageClassName: "{{ .Values.storage.class }}"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "{{ .Values.storage.size }}"
+{{- end }}

@@ -1,0 +1,95 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "helm-wordpress.fullname" . }}-db"
+  labels:
+    app: "{{ include "helm-wordpress.fullname" . }}-db"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: "{{ include "helm-wordpress.fullname" . }}-db"
+  template:
+    metadata:
+      name: "{{ include "helm-wordpress.fullname" . }}-db"
+      labels:
+        app: "{{ include "helm-wordpress.fullname" . }}-db"
+    spec:
+      volumes:
+      {{- if .Values.storage.enabled }}
+        - name: wp-db-vol
+          persistentVolumeClaim:
+            claimName: "{{ include "helm-wordpress.fullname" . }}-db-vol"
+      {{- end}}
+      containers:
+        - name: mariadb
+          image: "{{ .Values.images.mariadb.name }}:{{ .Values.images.mariadb.tag }}"
+          {{- if .Values.storage.enabled }}
+          volumeMounts:
+            - mountPath: "/var/lib/mysql"
+              name: wp-db-vol
+          {{- end}}
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name:  "{{ include "helm-wordpress.fullname" . }}-secret"
+                  key: rootPassword
+            - name: MARIADB_DATABASE
+              value: "wp"
+            - name: MARIADB_USER
+              valueFrom:
+                secretKeyRef:
+                  name:  "{{ include "helm-wordpress.fullname" . }}-secret"
+                  key: username
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name:  "{{ include "helm-wordpress.fullname" . }}-secret"
+                  key: password
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  "{{ include "helm-wordpress.fullname" . }}-fe"
+  labels:
+    app: "{{ include "helm-wordpress.fullname" . }}-fe"
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 50%
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: "{{ include "helm-wordpress.fullname" . }}-fe"
+  template:
+    metadata:
+      labels:
+        app: "{{ include "helm-wordpress.fullname" . }}-fe"
+    spec:
+      containers:
+        - name: web
+          image: "{{ .Values.images.wordpress.name }}:{{ .Values.images.wordpress.tag }}"
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: "{{ include "helm-wordpress.fullname" . }}-config"
+          env:
+            - name: WORDPRESS_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "helm-wordpress.fullname" . }}-secret"
+                  key: username
+            - name: WORDPRESS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "helm-wordpress.fullname" . }}-secret"
+                  key: password
