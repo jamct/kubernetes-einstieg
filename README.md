@@ -10,7 +10,7 @@ Hier finden Sie alle Beispiele zum mehrteiligen Einstieg in den Container-Orches
 |Teil 4: Containerladeoffizier|Persistenter Speicher: Volumes, ConfigMaps und Secrets|[c’t 26/2022, S. 130](https://www.heise.de/select/ct/2022/26/2230718252768410612)|[Artikel vom 8.12.22](https://www.heise.de/hintergrund/Kubernetes-lernen-und-verstehen-Teil-4-Daten-speichern-7367376.html)|
 |Teil 5: Container-Sicherheitsbegehung|Sicherheit: TLS, NetworkPolicies, Berechtigungen|[c’t 03/2023, S. 154](https://www.heise.de/select/ct/2023/3/2232021023011260054)|[Artikel vom 6.1.2023](https://www.heise.de/ratgeber/Kubernetes-lernen-und-verstehen-Teil-5-Sicherheitskonzepte-einsetzen-7445949.html)|
 |Helm-Einführung|YAML verpacken mit Helm|[c’t 11/2023, S. 164](https://www.heise.de/select/ct/2023/11/2232210063350929022)|[Artikel vom 5.5.2023](https://www.heise.de/ratgeber/Containerverpacker-Kubernetes-Anwendungen-mit-Helm-paketieren-8976672.html)|
-|Argo-CD-Einführung|Kubernetes-Cluster mit Argo CD automatisieren|[c’t 14/2023, S. 146](https://www.heise.de/select/ct/2023/11/2232210063350929022)|[Artikel vom 5.5.2023](https://www.heise.de/ratgeber/Containerverpacker-Kubernetes-Anwendungen-mit-Helm-paketieren-8976672.html)|
+|Argo-CD-Einführung|Kubernetes-Cluster mit Argo CD automatisieren|[c’t 14/2023, S. 146](https://www.heise.de/select/ct/2023/14/2232210084290162358)|[]()|
 
 ## Beispiele in diesem Repository
 
