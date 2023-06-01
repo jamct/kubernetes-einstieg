@@ -1,0 +1,23 @@
+# Beispiel für ein Token, um auf ein privates Repository zugreifen zu können.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gh-creds
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repo-creds
+stringData:
+  url: https://github.com/<Name>
+  type: helm
+  password: <Ihr Token>
+  username: <Ihr Name>
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gh-repo
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  url: https://github.com/<Name>/<Repo>

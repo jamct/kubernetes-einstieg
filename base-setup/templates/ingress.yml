@@ -1,0 +1,16 @@
+{{- if .Values.traefik.enabled }}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: "{{ include "base-setup.fullname" . }}-argo-ingress"
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: "{{.Values.argo-service}}"
+          port: 80
+{{- end }}

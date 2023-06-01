@@ -1,0 +1,23 @@
+# Beispiel, um eine Application aus einem Helm-Chart zu erzeugen, das selbst im Github liegt. Achtung: Pfad zum Repository in Zeile 10 anpassen
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: base-setup
+  namespace: default
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/<Name>/<Repo>
+  path: base-setup
+  helm:
+    releaseName: base-setup
+    values: |
+      traefik:
+        enabled: true
+  destination:
+    name: in-cluster
+    namespace: default
+  syncPolicy:
+    automated:
+    prune: true
+    selfHeal: true

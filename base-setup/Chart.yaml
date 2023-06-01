@@ -1,0 +1,11 @@
+apiVersion: v2
+name: base-setup
+description: A simple helm chart with traefik router
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+dependencies:
+  - name: traefik
+    version: ~23.0.1
+    repository: https://traefik.github.io/charts
+    condition: traefik.enabled
