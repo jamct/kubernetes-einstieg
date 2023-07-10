@@ -11,6 +11,6 @@ spec:
     - match: PathPrefix(`/`)
       kind: Rule
       services:
-        - name: "{{.Values.argo-service}}"
-          port: 80
+       - name: "{{.Values.argoService}}"
+         port: 80
 {{- end }}
